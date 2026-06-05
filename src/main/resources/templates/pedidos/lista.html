@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pedidos Personalizados - Piñatería Paraíso de la Fantasía</title>
+    <link rel="icon" th:href="@{/img/LogoPiñateria.png}" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+
+        :root {
+            --p900: #2D0F52;
+            --p700: #5B2D8E;
+            --p600: #6D3EAB;
+            --p500: #8B5CF6;
+            --p400: #A78BFA;
+            --p200: #DDD6FE;
+            --p100: #EDE9FE;
+            --p50:  #F5F2FF;
+            --surface: #FFFFFF;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--p50);
+            background-image:
+                radial-gradient(ellipse 60% 45% at 0% 0%,   rgba(91,45,142,.06) 0%, transparent 55%),
+                radial-gradient(ellipse 50% 40% at 100% 100%, rgba(109,62,171,.05) 0%, transparent 55%);
+            min-height: 100vh;
+            color: var(--p900);
+            padding-bottom: 60px;
+        }
+
+        .main-nav {
+            background: linear-gradient(115deg, #3D1566 0%, #5B2D8E 45%, #7C3AED 100%);
+            border-bottom: 1px solid rgba(255,255,255,.1);
+            box-shadow: 0 4px 28px rgba(61,21,102,.28);
+            padding: .55rem 0;
+        }
+        .brand-wrap { display:flex; align-items:center; gap:6px; text-decoration:none; flex-shrink:0; }
+        .brand-logo-img { height:48px; width:auto; object-fit:contain; mix-blend-mode:screen; }
+        .brand-text .b1 { display:block; font-size:.68rem; font-weight:700; color:rgba(255,255,255,.55); text-transform:uppercase; letter-spacing:.8px; }
+        .brand-text .b2 { display:block; font-size:1.05rem; font-weight:900; color:#fff; letter-spacing:-.1px; }
+        .nav-pill { display:inline-flex; align-items:center; gap:7px; font-size:.875rem; font-weight:700; color:rgba(255,255,255,.65); padding:6px 13px; border-radius:50px; text-decoration:none; transition:background .2s,color .2s; }
+        .nav-pill:hover { background:rgba(255,255,255,.13); color:#fff; }
+        .nav-pill .ndot { width:26px; height:26px; border-radius:8px; background:rgba(255,255,255,.12); display:inline-flex; align-items:center; justify-content:center; font-size:12px; }
+        .nav-user { font-size:.82rem; font-weight:800; color:rgba(255,255,255,.55); display:flex; align-items:center; gap:6px; }
+        .nav-user i { color:var(--p400); }
+        .btn-exit { font-size:.82rem; font-weight:800; background:rgba(255,255,255,.09); border:1.5px solid rgba(255,255,255,.2); color:rgba(255,255,255,.8); padding:5px 16px; border-radius:50px; cursor:pointer; transition:all .2s; }
+        .btn-exit:hover { background:rgba(255,255,255,.18); border-color:rgba(255,255,255,.4); color:#fff; }
+        .btn-back {
+            display:inline-flex; align-items:center; gap:8px;
+            font-size:.88rem; font-weight:700; color:var(--p700);
+            background:var(--surface); border:1.5px solid var(--p200);
+            padding:7px 18px; border-radius:50px; text-decoration:none;
+            box-shadow:0 2px 8px rgba(91,45,142,.08); transition:all .2s;
+        }
+        .btn-back:hover { background:var(--p100); border-color:var(--p500); color:var(--p700); transform:translateX(-3px); }
+
+        .page-title { font-size:1.85rem; font-weight:900; letter-spacing:-.4px; color:var(--p900); margin:0; }
+        .page-sub   { font-size:.92rem; font-weight:600; color:var(--p700); opacity:.65; margin:2px 0 0; }
+        .btn-new-pedido {
+            display:inline-flex; align-items:center; gap:8px;
+            background:linear-gradient(135deg, #3D1566, #6D28D9);
+            color:#fff; border:none; border-radius:12px;
+            padding:.6rem 1.3rem; font-size:.92rem; font-weight:800;
+            font-family:'Nunito', sans-serif;
+            box-shadow:0 4px 14px rgba(61,21,102,.28);
+            cursor:pointer; transition:transform .2s, box-shadow .2s;
+            white-space:nowrap;
+        }
+        .btn-new-pedido:hover { transform:translateY(-2px); box-shadow:0 7px 20px rgba(61,21,102,.38); color:#fff; }
+        .panel-card {
+            background: var(--surface);
+            border-radius: 20px;
+            border: 1.5px solid var(--p100);
+            box-shadow: 0 4px 24px rgba(91,45,142,.08);
+            overflow: hidden;
+        }
+        .panel-head {
+            display:flex; align-items:center;
+            justify-content:space-between; flex-wrap:wrap; gap:10px;
+            padding:1.2rem 1.5rem;
+            border-bottom:1.5px solid var(--p100);
+            background:linear-gradient(135deg, var(--p50) 0%, #fff 100%);
+        }
+        .panel-icon {
+            width:42px; height:42px; border-radius:13px;
+            background:linear-gradient(135deg, var(--p700), var(--p500));
+            display:flex; align-items:center; justify-content:center;
+            color:#fff; font-size:1rem; flex-shrink:0;
+            box-shadow:0 4px 12px rgba(91,45,142,.25);
+        }
+        .panel-title { font-size:1rem; font-weight:900; color:var(--p700); margin:0; }
+        .panel-sub   { font-size:.78rem; font-weight:600; color:var(--p600); opacity:.6; margin:0; }
+        .panel-badge {
+            font-size:.73rem; font-weight:800;
+            background:var(--p100); color:var(--p700);
+            border:1.5px solid var(--p200);
+            padding:4px 14px; border-radius:50px; white-space:nowrap;
+        }
+        .panel-body { padding:1.25rem 1.5rem; }
+        .ped-table { margin:0; border-collapse:separate; border-spacing:0; }
+        .ped-table thead th {
+            font-size:.72rem; font-weight:800; text-transform:uppercase;
+            letter-spacing:.6px; color:var(--p700); opacity:.6;
+            border-bottom:1.5px solid var(--p100) !important;
+            background:transparent; padding:.6rem .85rem;
+        }
+        .ped-table tbody tr { transition:background .15s; }
+        .ped-table tbody tr:hover td { background:var(--p50); }
+        .ped-table tbody td {
+            font-size:.86rem; font-weight:600; color:var(--p900);
+            padding:.8rem .85rem;
+            border-bottom:1px solid var(--p50) !important;
+            vertical-align:middle; background:transparent; transition:background .15s;
+        }
+
+        .id-chip {
+            display:inline-flex; align-items:center; justify-content:center;
+            padding:3px 10px; border-radius:8px;
+            background:var(--p100); color:var(--p700);
+            font-size:.75rem; font-weight:900; letter-spacing:.3px; white-space:nowrap;
+        }
+
+        .client-name { font-weight:800; color:var(--p900); }
+        .desc-cell { color:var(--p900); opacity:.75; font-size:.84rem; }
+        .date-chip {
+            display:inline-flex; align-items:center; gap:5px;
+            font-size:.8rem; font-weight:700; color:var(--p700);
+        }
+
+        .ped-table .badge {
+            font-size:.75rem; font-weight:800;
+            padding:5px 13px; border-radius:8px; letter-spacing:.2px;
+        }
+
+        .btn-entregar {
+            display:inline-flex; align-items:center; gap:5px;
+            font-size:.78rem; font-weight:800;
+            background:linear-gradient(135deg, #16A34A, #22C55E);
+            color:#fff; border:none; border-radius:9px;
+            padding:5px 12px; text-decoration:none;
+            box-shadow:0 3px 8px rgba(22,163,74,.25);
+            transition:all .2s;
+        }
+        .btn-entregar:hover { transform:translateY(-2px); box-shadow:0 5px 14px rgba(22,163,74,.35); color:#fff; }
+
+        .btn-delete {
+            width:32px; height:32px; border-radius:9px;
+            background:#FEF2F2; border:1.5px solid #FECACA;
+            color:#DC2626; font-size:13px;
+            display:inline-flex; align-items:center; justify-content:center;
+            cursor:pointer; text-decoration:none; transition:all .2s;
+        }
+        .btn-delete:hover { background:#FEE2E2; border-color:#DC2626; transform:scale(1.08); color:#DC2626; }
+        .empty-row td {
+            text-align:center; padding:3rem 1rem !important;
+            color:var(--p700); font-weight:700; opacity:.45;
+        }
+
+        #modalPedido .modal-content {
+            border-radius:20px !important; overflow:hidden;
+            border:1.5px solid var(--p200) !important;
+            box-shadow:0 20px 60px rgba(61,21,102,.2) !important;
+        }
+
+        .modal-ped-head {
+            background:linear-gradient(115deg, #3D1566 0%, #5B2D8E 50%, #7C3AED 100%);
+            padding:1.1rem 1.5rem;
+            display:flex; align-items:center; justify-content:space-between;
+            border:none !important;
+        }
+        .modal-ped-title {
+            display:flex; align-items:center; gap:10px;
+            font-size:.98rem; font-weight:900; color:#fff; margin:0;
+        }
+        .modal-ped-title .mph-icon {
+            width:34px; height:34px; border-radius:10px;
+            background:rgba(255,255,255,.15);
+            display:flex; align-items:center; justify-content:center;
+            font-size:.9rem;
+        }
+        .btn-close-modal {
+            background:rgba(255,255,255,.15); border:1.5px solid rgba(255,255,255,.25);
+            color:#fff; width:30px; height:30px; border-radius:8px;
+            display:flex; align-items:center; justify-content:center;
+            cursor:pointer; font-size:14px; transition:all .2s; flex-shrink:0;
+        }
+        .btn-close-modal:hover { background:rgba(255,255,255,.25); }
+        .modal-ped-body { padding:1.5rem; background:#fff; }
+        .modal-ped-body .form-label {
+            font-size:.75rem; font-weight:800; color:var(--p900);
+            opacity:.6; text-transform:uppercase; letter-spacing:.5px;
+            margin-bottom:.4rem !important;
+        }
+        .modal-ped-body .form-select,
+        .modal-ped-body .form-control {
+            border:1.5px solid var(--p200) !important;
+            border-radius:12px !important;
+            font-family:'Nunito', sans-serif !important;
+            font-size:.88rem !important; font-weight:600 !important;
+            color:var(--p900) !important;
+            background-color:var(--p50) !important;
+            padding:.57rem .9rem !important;
+            transition:border-color .2s, box-shadow .2s !important;
+        }
+        .modal-ped-body .form-select:focus,
+        .modal-ped-body .form-control:focus {
+            border-color:var(--p500) !important;
+            box-shadow:0 0 0 3px rgba(139,92,246,.12) !important;
+            background-color:#fff !important;
+        }
+
+        .modal-ped-footer {
+            padding:1rem 1.5rem;
+            background:var(--p50);
+            border-top:1.5px solid var(--p100) !important;
+            display:flex; gap:8px;
+        }
+        .btn-modal-cancel {
+            flex:1; background:transparent; color:var(--p700);
+            border:1.5px solid var(--p200); border-radius:11px;
+            font-size:.88rem; font-weight:800; padding:.6rem;
+            font-family:'Nunito', sans-serif; cursor:pointer; transition:all .2s;
+        }
+        .btn-modal-cancel:hover { background:var(--p100); }
+        .btn-modal-submit {
+            flex:2; background:linear-gradient(135deg, var(--p700), var(--p500));
+            color:#fff; border:none; border-radius:11px;
+            font-size:.88rem; font-weight:800; padding:.6rem;
+            font-family:'Nunito', sans-serif; cursor:pointer; transition:opacity .2s;
+        }
+        .btn-modal-submit:hover { opacity:.88; }
+    </style>
+</head>
+<body>
+
+
+<nav class="main-nav navbar navbar-expand-lg mb-4">
+    <div class="container">
+        <a class="brand-wrap" th:href="@{/dashboard}">
+            <img th:src="@{/img/LogoPiñateria-01.png}"
+                 alt="Logo Piñatería"
+                 class="brand-logo-img">
+            <div class="brand-text">
+                <span class="b1">Piñatería</span>
+                <span class="b2">Paraíso de la Fantasía</span>
+            </div>
+        </a>
+        <button class="navbar-toggler border-0 p-1" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarNav" style="filter:invert(1)">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto gap-1 mt-3 mt-lg-0">
+                <li class="nav-item"><a class="nav-pill" th:href="@{/ventas/nueva}"><span class="ndot"><i class="fa-solid fa-cash-register"></i></span>Ventas</a></li>
+                <li class="nav-item"><a class="nav-pill" th:href="@{/productos}"><span class="ndot"><i class="fa-solid fa-box"></i></span>Inventario</a></li>
+                <li class="nav-item"><a class="nav-pill" th:href="@{/pedidos/lista}"><span class="ndot"><i class="fa-solid fa-gift"></i></span>Pedidos</a></li>
+                <li class="nav-item"><a class="nav-pill" th:href="@{/clientes}"><span class="ndot"><i class="fa-solid fa-users"></i></span>Clientes</a></li>
+                <li class="nav-item"><a class="nav-pill" th:href="@{/reportes}"><span class="ndot"><i class="fa-solid fa-chart-line"></i></span>Reportes</a></li>
+            </ul>
+            <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
+                <span class="nav-user"><i class="fa-solid fa-circle-user"></i> Admin</span>
+                <form th:action="@{/logout}" method="post" class="m-0">
+                    <button type="submit" class="btn-exit">Salir <i class="fa-solid fa-arrow-right-from-bracket ms-1"></i></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="mb-3">
+        <a th:href="@{/dashboard}" class="btn-back">
+            <i class="fa-solid fa-arrow-left-long"></i> Volver al Menú Principal
+        </a>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-start align-items-md-center mb-4 flex-wrap gap-3">
+        <div>
+            <h1 class="page-title">🎁 Pedidos Personalizados</h1>
+            <p class="page-sub">Gestiona y controla los pedidos especiales de tus clientes.</p>
+        </div>
+        <button type="button" class="btn-new-pedido"
+                data-bs-toggle="modal" data-bs-target="#modalPedido">
+            <i class="fa-solid fa-wand-magic-sparkles"></i> Registrar Pedido
+        </button>
+    </div>
+
+    <div class="panel-card">
+        <div class="panel-head">
+            <div class="d-flex align-items-center gap-3">
+                <div class="panel-icon"><i class="fa-solid fa-list-check"></i></div>
+                <div>
+                    <p class="panel-title">Listado de Pedidos</p>
+                    <p class="panel-sub">Todos los pedidos personalizados registrados.</p>
+                </div>
+            </div>
+            <span class="panel-badge">
+                <i class="fa-solid fa-gift me-1"></i> Pedidos Activos
+            </span>
+        </div>
+
+        <div class="panel-body">
+            <div class="table-responsive">
+                <table class="table ped-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Descripción</th>
+                            <th>Fecha Entrega</th>
+                            <th>Observaciones</th>
+                            <th>Estado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="p : ${pedidos}">
+                            <td><span class="id-chip" th:text="'#PD-' + ${p.id}"></span></td>
+                            <td class="client-name" th:text="${p.cliente != null ? p.cliente.nombre : 'Sin Cliente'}"></td>
+                            <td class="desc-cell" th:text="${p.descripcion}"></td>
+                            <td>
+                                <span class="date-chip">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    <span th:text="${p.fechaEntrega != null ? #temporals.format(p.fechaEntrega, 'dd/MM/yyyy') : 'Por definir'}"></span>
+                                </span>
+                            </td>
+                            <td class="desc-cell" th:text="${p.observaciones != null && !p.observaciones.isEmpty() ? p.observaciones : 'Ninguna'}"></td>
+                            <td>
+                                <span th:if="${p.estado.toString() == 'PENDIENTE'}"   class="badge bg-warning text-dark rounded-pill px-3 py-2">PENDIENTE</span>
+                                <span th:if="${p.estado.toString() == 'EN_PROCESO'}"  class="badge bg-info text-dark rounded-pill px-3 py-2">EN PROCESO</span>
+                                <span th:if="${p.estado.toString() == 'LISTO'}"       class="badge bg-primary text-white rounded-pill px-3 py-2">LISTO</span>
+                                <span th:if="${p.estado.toString() == 'ENTREGADO'}"   class="badge bg-success text-white rounded-pill px-3 py-2">ENTREGADO</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="d-flex align-items-center justify-content-center gap-2">
+                                    <a th:if="${p.estado.toString() == 'PENDIENTE'}"
+                                       th:href="@{/pedidos/entregar/{id}(id=${p.id})}"
+                                       class="btn-entregar" title="Entregar">
+                                        <i class="fa-solid fa-gift"></i> Entregar
+                                    </a>
+                                    <a th:href="@{/pedidos/eliminar/{id}(id=${p.id})}"
+                                       class="btn-delete"
+                                       onclick="return confirm('¿Eliminar este pedido personalizado?')">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(pedidos)}" class="empty-row">
+                            <td colspan="7">
+                                <div style="font-size:2rem; margin-bottom:.5rem">🎈</div>
+                                ¡No hay pedidos especiales registrados por ahora!
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+<div class="modal fade" id="modalPedido" data-bs-backdrop="static" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-ped-head">
+                <h5 class="modal-ped-title">
+                    <span class="mph-icon"><i class="fa-solid fa-cake-candles"></i></span>
+                    Nuevo Pedido Especial
+                </h5>
+                <button type="button" class="btn-close-modal" data-bs-dismiss="modal" aria-label="Close">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form th:action="@{/pedidos/guardar}" th:object="${nuevoPedido}" method="post">
+                <div class="modal-ped-body">
+
+                    <div class="mb-3">
+                        <label class="form-label">Asignar Cliente *</label>
+                        <select name="clienteId" class="form-select" required>
+                            <option value="">-- Selecciona al cumpleañero/dueño --</option>
+                            <option th:each="c : ${clientes}"
+                                    th:value="${c.id}"
+                                    th:text="${c.nombre}"></option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Descripción del Pedido *</label>
+                        <textarea th:field="*{descripcion}" class="form-control" rows="3"
+                                  placeholder="Ej: Arco de globos cromados rosa y piñata temática." required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Fecha de Entrega *</label>
+                        <input type="date" th:field="*{fechaEntrega}" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Observaciones o Notas</label>
+                        <textarea th:field="*{observaciones}" class="form-control" rows="2"
+                                  placeholder="Ej: Validar si hay stock de globos dorados antes del jueves."></textarea>
+                    </div>
+
+                </div>
+
+                <div class="modal-ped-footer">
+                    <button type="button" class="btn-modal-cancel" data-bs-dismiss="modal">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-modal-submit">
+                        <i class="fa-solid fa-wand-magic-sparkles me-2"></i> Agendar Pedido
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

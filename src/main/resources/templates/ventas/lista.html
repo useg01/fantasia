@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Historial de Ventas - El Paraíso de la Fantasía</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #ffe5ec 0%, #c9e4de 50%, #dbcdf0 100%);
+            font-family: 'Fredoka', sans-serif;
+            min-height: 100vh;
+            color: #2d3748;
+            padding-top: 40px;
+            padding-bottom: 50px;
+        }
+
+        .bubble-card {
+            background-color: #ffffff;
+            border-radius: 24px;
+            border: 4px solid #f7d6e0;
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .bubble-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 8px;
+            background: linear-gradient(90deg, #ff99c8, #fcf6bd, #d0f4de, #a9def9, #e4c1f9);
+        }
+
+        .text-purple { color: #6c5ce7; }
+        .text-cyan { color: #2bcbba; }
+        .bg-pink-soft { background-color: #ffe5ec; }
+        .bg-purple-soft { background-color: #e8e5ff; }
+        .pill-badge { font-size: 14px; font-weight: 600; padding: 8px 16px; border-radius: 50px; display: inline-block; }
+
+        /* Botón personalizado para volver */
+        .btn-back {
+            background-color: #ffffff;
+            color: #6c5ce7;
+            border: 2px solid #e8e5ff;
+            transition: all 0.2s ease;
+        }
+        .btn-back:hover {
+            background-color: #e8e5ff;
+            color: #6c5ce7;
+            transform: translateX(-3px);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="mb-4">
+        <a th:href="@{/dashboard}" class="btn btn-back rounded-pill fw-bold px-3 py-2 shadow-sm">
+            <i class="fa-solid fa-arrow-left-long me-2"></i> Volver al Menú Principal
+        </a>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+        <h2 class="fw-bold text-purple mb-0">📜 Historial del Cofre Mágico (Ventas)</h2>
+        <a th:href="@{/ventas/nueva}" class="btn btn-cyan text-white rounded-pill fw-bold px-4 shadow-sm"><i class="fa-solid fa-plus me-1"></i> Nueva Venta</a>
+    </div>
+
+    <div class="bubble-card p-4 p-md-5">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle m-0">
+                <thead class="table-light">
+                <tr>
+                    <th class="py-3">ID Recibo</th>
+                    <th class="py-3">Cliente Amigo</th>
+                    <th class="py-3">Fecha y Hora</th>
+                    <th class="py-3 text-end">Monto Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="v : ${ventas}">
+                    <td class="fw-bold text-secondary" th:text="'#00' + ${v.id}"></td>
+                    <td class="fw-medium text-dark" th:text="${v.cliente.nombre}"></td>
+                    <td th:text="${#temporals.format(v.fechaVenta, 'dd/MM/yyyy hh:mm a')}"></td>
+                    <td class="text-end fw-bold text-cyan" th:text="${#numbers.formatCurrency(v.total)}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(ventas)}">
+                    <td colspan="4" class="text-center py-4 text-muted fw-medium">
+                        🎈 ¡Aún no se han registrado transacciones el día de hoy!
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

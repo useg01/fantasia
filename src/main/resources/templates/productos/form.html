@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Guardar Producto - El Paraíso de la Fantasía</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { background: linear-gradient(135deg, #ffe5ec 0%, #c9e4de 50%, #dbcdf0 100%); font-family: 'Fredoka', sans-serif; min-height: 100vh; }
+        .bubble-card { background-color: #ffffff; border-radius: 24px; border: 4px solid #f7d6e0; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+        .text-purple { color: #6c5ce7; }
+    </style>
+</head>
+<body class="p-4 p-md-5">
+
+<div class="container" style="max-width: 600px;">
+    <div class="bubble-card p-4 p-sm-5 shadow">
+
+        <h2 class="fw-bold text-purple text-center mb-4" th:text="${producto.id == null} ? '🪅 Nuevo Producto' : '📝 Editar Producto'"></h2>
+
+        <form th:action="@{/productos/guardar}" th:object="${producto}" method="post">
+            <input type="hidden" th:field="*{id}">
+            <input type="hidden" th:field="*{estado}">
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold text-secondary">Nombre del Artículo</label>
+                <input type="text" th:field="*{nombre}" class="form-control rounded-3" placeholder="Ej: Bolsa de Globos Metálicos">
+                <div class="text-danger small mt-1 fw-medium" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold text-secondary">Categoría</label>
+                <input type="text" th:field="*{categoria}" class="form-control rounded-3" placeholder="Ej: Piñatas, Inflables, Velas">
+                <div class="text-danger small mt-1 fw-medium" th:if="${#fields.hasErrors('categoria')}" th:errors="*{categoria}"></div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label fw-semibold text-secondary">Descripción</label>
+                <input type="text" th:field="*{descripcion}" class="form-control rounded-3" placeholder="Breve descripción del producto...">
+            </div>
+
+            <div class="row">
+                <div class="col-6 mb-3">
+                    <label class="form-label fw-semibold text-secondary">Precio ($)</label>
+                    <input type="number" step="0.01" th:field="*{precio}" class="form-control rounded-3">
+                    <div class="text-danger small mt-1 fw-medium" th:if="${#fields.hasErrors('precio')}" th:errors="*{precio}"></div>
+                </div>
+                <div class="col-6 mb-3">
+                    <label class="form-label fw-semibold text-secondary">Stock</label>
+                    <input type="number" th:field="*{stock}" class="form-control rounded-3">
+                    <div class="text-danger small mt-1 fw-medium" th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}"></div>
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-semibold text-secondary">Stock Mínimo de Alerta</label>
+                <input type="number" th:field="*{stockMinimo}" class="form-control rounded-3">
+                <div class="text-danger small mt-1 fw-medium" th:if="${#fields.hasErrors('stockMinimo')}" th:errors="*{stockMinimo}"></div>
+            </div>
+
+            <div class="d-flex gap-2 mt-4">
+                <button type="submit" class="btn btn-primary w-100 rounded-pill fw-bold py-2" style="background-color: #6c5ce7; border: none;">Guardar ✨</button>
+                <a th:href="@{/productos}" class="btn btn-outline-secondary w-100 rounded-pill fw-bold py-2">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>

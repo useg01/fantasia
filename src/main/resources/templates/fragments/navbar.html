@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="navbar">
+    <link rel="stylesheet" th:href="@{/css/global.css}">
+    <style>
+        .text-purple { color: #6c5ce7; }
+        .text-cyan { color: #2bcbba; }
+        .text-orange { color: #ff9f43; }
+        .text-pink { color: #ff85a1; }
+        .bg-pink-soft { background-color: #ffe5ec; }
+        .bg-purple-soft { background-color: #e8e5ff; }
+        .pill-badge-nav {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 8px 16px;
+            border-radius: 50px;
+            display: inline-block;
+        }
+        .border-pink-soft {
+            border-color: #ffe5ec !important;
+        }
+    </style>
+
+    <nav class="navbar navbar-expand-lg bg-white shadow-sm mb-5 px-3 py-3 rounded-bottom-4 border-bottom border-3 border-pink-soft">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" th:href="@{/dashboard}">
+                <span class="fs-3 me-2">🎈</span>
+                <span class="fw-bold text-purple fs-4">Fantasía</span>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNavNav">
+                <ul class="navbar-nav mx-auto fw-semibold">
+                    <li class="nav-item">
+                        <a class="nav-link px-3" th:href="@{/ventas/nueva}"><i class="fa-solid fa-cash-register text-cyan"></i> Ventas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" th:href="@{/productos}"><i class="fa-solid fa-box text-orange"></i> Inventario</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" th:href="@{/pedidos/lista}"><i class="fa-solid fa-gift text-purple"></i> Pedidos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" th:href="@{/clientes/lista}"><i class="fa-solid fa-users text-pink"></i> Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3" th:href="@{/reportes}"><i class="fa-solid fa-chart-line text-success"></i> Reportes</a>
+                    </li>
+                </ul>
+
+                <div class="d-flex align-items-center mt-3 mt-lg-0">
+                    <button type="button" class="btn btn-outline-secondary rounded-pill me-3"
+                            onclick="toggleTheme()" title="Cambiar tema">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+
+                    <span class="pill-badge-nav bg-purple-soft text-purple">
+    <i class="fa-solid fa-user-circle me-1"></i> Admin
+</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+</div>
+</html>

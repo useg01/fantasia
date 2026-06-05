@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dashboard - Piñatería Paraíso de la Fantasía</title>
+    <link rel="icon" href="img/LogoPiñateria.png" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --p900: #2D0F52;   
+            --p700: #5B2D8E;   
+            --p600: #6D3EAB;
+            --p500: #8B5CF6;   
+            --p400: #A78BFA;
+            --p200: #DDD6FE;
+            --p100: #EDE9FE;
+            --p50:  #F5F2FF;   
+            --surface: #FFFFFF;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: var(--p50);
+            background-image:
+                radial-gradient(ellipse 60% 45% at 0%   0%,   rgba(91,45,142,.06) 0%, transparent 55%),
+                radial-gradient(ellipse 50% 40% at 100% 100%, rgba(109,62,171,.05) 0%, transparent 55%);
+            min-height: 100vh;
+            color: var(--p900);
+            padding-bottom: 60px;
+        }
+
+        .main-nav {
+            background: linear-gradient(115deg, #3D1566 0%, #5B2D8E 45%, #7C3AED 100%);
+            border-bottom: 1px solid rgba(255,255,255,.1);
+            box-shadow: 0 4px 28px rgba(61,21,102,.28);
+            padding: .55rem 0;
+        }
+
+        .brand-wrap {
+            display: flex; align-items: center;
+            gap: 6px; text-decoration: none;
+            flex-shrink: 0;
+        }
+        .brand-logo-img {
+            height: 48px; width: auto;
+            object-fit: contain;
+            mix-blend-mode: screen;
+        }
+        .brand-text { line-height: 1.15; }
+        .brand-text .b1 {
+            display: block;
+            font-size: .68rem; font-weight: 700;
+            color: rgba(255,255,255,.55);
+            text-transform: uppercase; letter-spacing: .8px;
+        }
+        .brand-text .b2 {
+            display: block;
+            font-size: 1.05rem; font-weight: 900;
+            color: #fff; letter-spacing: -.1px;
+        }
+
+        .nav-pill {
+            display: inline-flex; align-items: center; gap: 7px;
+            font-size: .875rem; font-weight: 700;
+            color: rgba(255,255,255,.65);
+            padding: 6px 13px; border-radius: 50px;
+            text-decoration: none;
+            transition: background .2s, color .2s;
+        }
+        .nav-pill:hover { background: rgba(255,255,255,.13); color: #fff; }
+
+        .nav-pill .ndot {
+            width: 26px; height: 26px; border-radius: 8px;
+            background: rgba(255,255,255,.12);
+            display: inline-flex; align-items: center;
+            justify-content: center; font-size: 12px;
+        }
+
+        .nav-user {
+            font-size: .82rem; font-weight: 800;
+            color: rgba(255,255,255,.55);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .nav-user i { color: var(--p400); }
+
+        .btn-exit {
+            font-size: .82rem; font-weight: 800;
+            background: rgba(255,255,255,.09);
+            border: 1.5px solid rgba(255,255,255,.2);
+            color: rgba(255,255,255,.8);
+            padding: 5px 16px; border-radius: 50px;
+            cursor: pointer; transition: all .2s;
+        }
+        .btn-exit:hover {
+            background: rgba(255,255,255,.18);
+            border-color: rgba(255,255,255,.4); color: #fff;
+        }
+
+        .page-title {
+            font-size: 1.85rem; font-weight: 900;
+            letter-spacing: -.4px; color: var(--p900);
+        }
+        .page-sub {
+            font-size: .92rem; font-weight: 600;
+            color: var(--p700); opacity: .65;
+        }
+
+        .stat-card {
+            border-radius: 20px;
+            padding: 1.6rem 1.75rem;
+            color: #fff; position: relative;
+            overflow: hidden; display: block;
+            text-decoration: none;
+            transition: transform .3s ease, box-shadow .3s ease;
+        }
+        .stat-card:hover { transform: translateY(-6px); color: #fff; }
+
+        .stat-card::after {
+            content: ''; position: absolute;
+            right: -22px; bottom: -22px;
+            width: 115px; height: 115px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.09);
+        }
+        .stat-card::before {
+            content: ''; position: absolute;
+            right: 52px; bottom: -46px;
+            width: 165px; height: 165px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.05);
+        }
+
+        .sc1 {
+            background: linear-gradient(135deg, #3D1566 0%, #6D3EAB 100%);
+            box-shadow: 0 8px 28px rgba(61,21,102,.3);
+        }
+        .sc1:hover { box-shadow: 0 16px 36px rgba(61,21,102,.42); }
+
+        .sc2 {
+            background: linear-gradient(135deg, #5B2D8E 0%, #8B5CF6 100%);
+            box-shadow: 0 8px 28px rgba(91,45,142,.3);
+        }
+        .sc2:hover { box-shadow: 0 16px 36px rgba(91,45,142,.42); }
+
+        .sc3 {
+            background: linear-gradient(135deg, #7C3AED 0%, #A78BFA 100%);
+            box-shadow: 0 8px 28px rgba(124,58,237,.3);
+        }
+        .sc3:hover { box-shadow: 0 16px 36px rgba(124,58,237,.42); }
+
+        .stat-badge {
+            display: inline-block;
+            font-size: .74rem; font-weight: 800;
+            background: rgba(255,255,255,.16);
+            border-radius: 50px; padding: 4px 13px;
+            margin-bottom: 1rem; letter-spacing: .2px;
+        }
+        .stat-bg-icon {
+            position: absolute; top: 1.2rem; right: 1.4rem;
+            font-size: 2.6rem; opacity: .13;
+        }
+        .stat-label {
+            font-size: .8rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: .7px;
+            opacity: .8; margin: 0 0 .4rem;
+        }
+        .stat-value {
+            font-size: 3rem; font-weight: 900;
+            line-height: 1; position: relative; z-index: 1;
+        }
+        .stat-currency {
+            font-size: 1.45rem; font-weight: 700;
+            opacity: .7; vertical-align: middle; margin-right: 2px;
+        }
+
+        .stock-card {
+            background: var(--surface);
+            border-radius: 20px;
+            border: 1.5px solid var(--p100);
+            box-shadow: 0 2px 20px rgba(91,45,142,.06);
+            overflow: hidden;
+        }
+
+        .stock-head {
+            display: flex; align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap; gap: 12px;
+            padding: 1.35rem 1.75rem;
+            border-bottom: 1.5px solid var(--p100);
+            background: linear-gradient(135deg, var(--p50) 0%, #fff 100%);
+        }
+
+        .stock-icon-box {
+            width: 46px; height: 46px; border-radius: 13px;
+            background: linear-gradient(135deg, var(--p700), var(--p500));
+            display: flex; align-items: center;
+            justify-content: center;
+            font-size: 1.2rem; flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(91,45,142,.25);
+        }
+
+        .stock-title {
+            font-size: 1.05rem; font-weight: 900;
+            color: var(--p700); margin: 0;
+        }
+        .stock-sub {
+            font-size: .8rem; font-weight: 600;
+            color: var(--p600); opacity: .6; margin: 0;
+        }
+
+        .alert-badge {
+            font-size: .74rem; font-weight: 800;
+            background: var(--p100); color: var(--p700);
+            border: 1.5px solid var(--p200);
+            padding: 5px 15px; border-radius: 50px;
+            display: inline-block;
+        }
+
+        .stock-body { padding: 1.4rem 1.75rem; }
+        .stock-row {
+            display: flex; align-items: center;
+            justify-content: space-between;
+            background: var(--p50);
+            border: 1.5px solid var(--p100);
+            border-radius: 13px;
+            padding: .85rem 1.1rem;
+            text-decoration: none; color: inherit;
+            transition: border-color .2s, background .2s, transform .2s;
+        }
+        .stock-row:hover {
+            border-color: var(--p500);
+            background: var(--p100);
+            transform: translateX(4px);
+            color: inherit;
+        }
+        .stock-row-name {
+            font-size: .88rem; font-weight: 800; color: var(--p900);
+        }
+        .stock-row-meta {
+            font-size: .77rem; font-weight: 600;
+            color: var(--p700); opacity: .6; margin-top: 2px;
+        }
+        .stock-qty {
+            min-width: 40px; height: 40px; border-radius: 11px;
+            background: var(--p100); color: var(--p700);
+            font-size: 1.05rem; font-weight: 900;
+            display: flex; align-items: center;
+            justify-content: center; flex-shrink: 0;
+        }
+
+        /* Vacío */
+        .stock-empty { text-align: center; padding: 2.5rem 1rem; }
+        .stock-empty p {
+            font-size: .93rem; font-weight: 700;
+            color: var(--p700); opacity: .45; margin-top: .75rem;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="main-nav navbar navbar-expand-lg mb-4">
+    <div class="container">
+
+        <a class="brand-wrap" th:href="@{/dashboard}">
+            <img src="img/LogoPiñateria-01.png"
+                 alt="Logo Piñatería"
+                 class="brand-logo-img">
+            <div class="brand-text">
+                <span class="b1">Piñatería</span>
+                <span class="b2">Paraíso de la Fantasía</span>
+            </div>
+        </a>
+
+        <button class="navbar-toggler border-0 p-1" type="button"
+                data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                style="filter:invert(1)">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto gap-1 mt-3 mt-lg-0">
+                <li class="nav-item">
+                    <a class="nav-pill" th:href="@{/ventas/nueva}">
+                        <span class="ndot"><i class="fa-solid fa-cash-register"></i></span>
+                        Ventas
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-pill" th:href="@{/productos}">
+                        <span class="ndot"><i class="fa-solid fa-box"></i></span>
+                        Inventario
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-pill" th:href="@{/pedidos/lista}">
+                        <span class="ndot"><i class="fa-solid fa-gift"></i></span>
+                        Pedidos
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-pill" th:href="@{/clientes}">
+                        <span class="ndot"><i class="fa-solid fa-users"></i></span>
+                        Clientes
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-pill" th:href="@{/reportes}">
+                        <span class="ndot"><i class="fa-solid fa-chart-line"></i></span>
+                        Reportes
+                    </a>
+                </li>
+            </ul>
+
+            <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
+                <span class="nav-user">
+                    <i class="fa-solid fa-circle-user"></i> Admin
+                </span>
+                <form th:action="@{/logout}" method="post" class="m-0">
+                    <button type="submit" class="btn-exit">
+                        Salir <i class="fa-solid fa-arrow-right-from-bracket ms-1"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</nav>
+
+
+<div class="container">
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <h1 class="page-title mb-1">Menu principal</h1>
+            <p class="page-sub mb-0">
+                Resumen del día — clientes, pedidos e inventario de un vistazo.
+            </p>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+
+        <div class="col-12 col-md-4">
+            <a th:href="@{/clientes}" class="stat-card sc1">
+                <span class="stat-badge">👥 Clientes Amigos</span>
+                <i class="fa-solid fa-users stat-bg-icon"></i>
+                <p class="stat-label">Clientes Activos</p>
+                <div class="stat-value" th:text="${totalClientes}">0</div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <a th:href="@{/pedidos/lista}" class="stat-card sc2">
+                <span class="stat-badge">🎁 Por Entregar</span>
+                <i class="fa-solid fa-gift stat-bg-icon"></i>
+                <p class="stat-label">Pedidos Pendientes</p>
+                <div class="stat-value" th:text="${pedidosPendientes}">0</div>
+            </a>
+        </div>
+
+        <div class="col-12 col-md-4">
+            <a th:href="@{/ventas/lista}" class="stat-card sc3">
+                <span class="stat-badge">💰 Cofre Mágico</span>
+                <i class="fa-solid fa-coins stat-bg-icon"></i>
+                <p class="stat-label">Total Ventas</p>
+                <div class="stat-value">
+                    <span class="stat-currency">S/.</span><span
+                        th:text="${totalVentas != null ? #numbers.formatDecimal(totalVentas, 1, 'COMMA', 2, 'POINT') : '0.00'}">0.00</span>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="stock-card">
+                <div class="stock-head">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="stock-icon-box">🚨</div>
+                        <div>
+                            <h3 class="stock-title">Productos con stock bajo</h3>
+                            <p class="stock-sub">¡Peligro de piñata vacía! Repón estos artículos pronto.</p>
+                        </div>
+                    </div>
+                    <span class="alert-badge">
+                        <i class="fa-solid fa-triangle-exclamation me-1"></i> Alerta de Stock
+                    </span>
+                </div>
+
+                <div class="stock-body">
+                    <div class="row g-3">
+
+                        <div th:each="p : ${stockBajo}" class="col-12 col-md-6 col-lg-4">
+                            <a th:href="@{/productos/editar/{id}(id=${p.id})}" class="stock-row">
+                                <div class="d-flex align-items-center gap-3">
+                                    <span style="font-size:1.4rem; flex-shrink:0">🪅</span>
+                                    <div>
+                                        <div class="stock-row-name" th:text="${p.nombre}">Nombre de Producto</div>
+                                        <div class="stock-row-meta">
+                                            <i class="fa-solid fa-hourglass-half me-1"></i>
+                                            Quedan <span th:text="${p.stock}">0</span> unidades
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="stock-qty" th:text="${p.stock}">0</div>
+                            </a>
+                        </div>
+
+                        <div th:if="${#lists.isEmpty(stockBajo)}" class="col-12">
+                            <div class="stock-empty">
+                                <div style="font-size:2.2rem">🎈</div>
+                                <p>¡Todo en orden! No hay productos con desabastecimiento crítico.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
